@@ -1,4 +1,4 @@
-import BMICalculator from "./bmi-calculator"
+import BMICalculator from "./bmi-calculator.jsx"
 
 export const metadata = {
   title: "BMI Calculator - Calculate Your Body Mass Index | Calculator.net",

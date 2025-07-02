@@ -79,6 +79,23 @@ export default function HomePage() {
     { text: "MR", type: "function" },
   ]
 
+  const calculatorRoute = (name) => {
+    // Convert calculator name to kebab-case and remove 'Calculator' or 'Generator' suffix for route
+    let route = name
+      .replace(/ Calculator| Generator/g, "")
+      .replace(/[^a-zA-Z0-9 ]/g, "")
+      .trim()
+      .toLowerCase()
+      .replace(/ /g, "-");
+    // Special case for Random Number Generator and Password Generator
+    if (name.toLowerCase().includes("generator")) {
+      route += "-generator";
+    } else {
+      route += "-calculator";
+    }
+    return `/tools/${route}`;
+  };
+
   const categories = [
     {
       title: "Financial Calculators",
@@ -188,7 +205,7 @@ export default function HomePage() {
                 <ul className="category-links">
                   {category.links.map((link, linkIndex) => (
                     <li key={linkIndex}>
-                      <a href="#">{link}</a>
+                      <a href={calculatorRoute(link)}>{link}</a>
                     </li>
                   ))}
                 </ul>

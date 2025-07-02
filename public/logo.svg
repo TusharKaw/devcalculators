@@ -1,0 +1,20 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="16" cy="16" r="16" fill="url(#gradient)" />
+  
+  <!-- Code Brackets -->
+  <path d="M10 12L7 16L10 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22 12L25 16L22 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Center Gear/Tool Icon -->
+  <circle cx="16" cy="16" r="3" fill="none" stroke="white" stroke-width="1.5"/>
+  <path d="M16 11V13M16 19V21M21 16H19M13 16H11M19.5 12.5L18.5 13.5M13.5 18.5L12.5 19.5M19.5 19.5L18.5 18.5M13.5 13.5L12.5 12.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2196F3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F50057;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg> 

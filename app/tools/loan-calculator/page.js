@@ -1,12 +1,17 @@
 import LoanCalculator from "./loan-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
-  title: "Loan Calculator | Calculator.net",
+  title: "Loan Calculator | DevCalculators.com",
   description: "Free Loan Calculator. Calculate monthly payments and total cost.",
   keywords: "loan calculator, payment calculator, total loan cost",
-  canonical: "https://calculator.net/tools/loan-calculator.html",
+  canonical: "https://DevCalculators.com/tools/loan-calculator.html",
 }
 
 export default function LoanCalculatorPage() {
-  return <LoanCalculator />
+  return (
+    <CalculatorLayout title="Loan Calculator">
+      <LoanCalculator />
+    </CalculatorLayout>
+  )
 } 

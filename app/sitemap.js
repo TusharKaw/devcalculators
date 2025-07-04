@@ -1,5 +1,5 @@
 export default function sitemap() {
-  const baseUrl = "https://calculator.net"
+  const baseUrl = "https://DevCalculators.com"
 
   return [
     {

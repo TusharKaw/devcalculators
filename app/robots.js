@@ -5,6 +5,6 @@ export default function robots() {
       allow: "/",
       disallow: ["/api/", "/admin/"],
     },
-    sitemap: "https://calculator.net/sitemap.xml",
+    sitemap: "https://DevCalculators.com/sitemap.xml",
   }
 }

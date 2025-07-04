@@ -1,10 +1,10 @@
 import GradeCalculator from "./grade-calculator.jsx"
 
 export const metadata = {
-  title: "Grade Calculator | Calculator.net",
+  title: "Grade Calculator | DevCalculators.com",
   description: "Free Grade Calculator. Calculate your final grade based on scores and weights.",
   keywords: "grade calculator, final grade calculator, weighted grade calculator",
-  canonical: "https://calculator.net/tools/grade-calculator.html",
+  canonical: "https://DevCalculators.com/tools/grade-calculator.html",
 }
 
 export default function GradeCalculatorPage() {

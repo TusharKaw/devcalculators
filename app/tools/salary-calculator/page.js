@@ -1,4 +1,5 @@
 import SalaryCalculator from "./salary-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Salary Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function SalaryCalculatorPage() {
-  return <SalaryCalculator />
+  return (
+    <CalculatorLayout title="Salary Calculator">
+      <SalaryCalculator />
+    </CalculatorLayout>
+  )
 } 

@@ -1,4 +1,5 @@
 import ScientificCalculator from "./scientific-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Scientific Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function ScientificCalculatorPage() {
-  return <ScientificCalculator />
+  return (
+    <CalculatorLayout title="Scientific Calculator">
+      <ScientificCalculator />
+    </CalculatorLayout>
+  )
 } 

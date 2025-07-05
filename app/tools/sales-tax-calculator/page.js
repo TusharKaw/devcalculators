@@ -1,4 +1,5 @@
 import SalesTaxCalculator from "./sales-tax-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Sales Tax Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function SalesTaxCalculatorPage() {
-  return <SalesTaxCalculator />
+  return (
+    <CalculatorLayout title="Sales Tax Calculator">
+      <SalesTaxCalculator />
+    </CalculatorLayout>
+  )
 } 

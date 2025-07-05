@@ -1,4 +1,5 @@
 import TriangleCalculator from "./triangle-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Triangle Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function TriangleCalculatorPage() {
-  return <TriangleCalculator />
+  return (
+    <CalculatorLayout title="Triangle Calculator">
+      <TriangleCalculator />
+    </CalculatorLayout>
+  )
 } 

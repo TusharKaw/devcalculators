@@ -1,4 +1,5 @@
 import PasswordGenerator from "./password-generator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Password Generator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function PasswordGeneratorPage() {
-  return <PasswordGenerator />
+  return (
+    <CalculatorLayout title="Password Generator">
+      <PasswordGenerator />
+    </CalculatorLayout>
+  )
 } 

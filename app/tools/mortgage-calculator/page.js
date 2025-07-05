@@ -1,4 +1,5 @@
 import MortgageCalculator from "./mortgage-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Mortgage Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function MortgageCalculatorPage() {
-  return <MortgageCalculator />
+  return (
+    <CalculatorLayout title="Mortgage Calculator">
+      <MortgageCalculator />
+    </CalculatorLayout>
+  )
 } 

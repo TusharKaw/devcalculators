@@ -1,4 +1,5 @@
 import ConcreteCalculator from "./concrete-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Concrete Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function ConcreteCalculatorPage() {
-  return <ConcreteCalculator />
+  return (
+    <CalculatorLayout title="Concrete Calculator">
+      <ConcreteCalculator />
+    </CalculatorLayout>
+  )
 } 

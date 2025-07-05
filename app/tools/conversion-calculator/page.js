@@ -1,4 +1,5 @@
 import ConversionCalculator from "./conversion-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Conversion Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function ConversionCalculatorPage() {
-  return <ConversionCalculator />
+  return (
+    <CalculatorLayout title="Conversion Calculator">
+      <ConversionCalculator />
+    </CalculatorLayout>
+  )
 } 

@@ -1,4 +1,5 @@
 import RandomNumberGenerator from "./random-number-generator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Random Number Generator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function RandomNumberGeneratorPage() {
-  return <RandomNumberGenerator />
+  return (
+    <CalculatorLayout title="Random Number Generator">
+      <RandomNumberGenerator />
+    </CalculatorLayout>
+  )
 } 

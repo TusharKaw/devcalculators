@@ -1,4 +1,5 @@
 import SubnetCalculator from "./subnet-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Subnet Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function SubnetCalculatorPage() {
-  return <SubnetCalculator />
+  return (
+    <CalculatorLayout title="Subnet Calculator">
+      <SubnetCalculator />
+    </CalculatorLayout>
+  )
 } 

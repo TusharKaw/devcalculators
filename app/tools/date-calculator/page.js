@@ -1,4 +1,5 @@
 import DateCalculator from "./date-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Date Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function DateCalculatorPage() {
-  return <DateCalculator />
+  return (
+    <CalculatorLayout title="Date Calculator">
+      <DateCalculator />
+    </CalculatorLayout>
+  )
 } 

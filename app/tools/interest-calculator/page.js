@@ -1,4 +1,5 @@
 import InterestCalculator from "./interest-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Interest Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function InterestCalculatorPage() {
-  return <InterestCalculator />
+  return (
+    <CalculatorLayout title="Interest Calculator">
+      <InterestCalculator />
+    </CalculatorLayout>
+  )
 } 

@@ -1,4 +1,5 @@
 import AmortizationCalculator from "./amortization-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Amortization Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function AmortizationCalculatorPage() {
-  return <AmortizationCalculator />
+  return (
+    <CalculatorLayout title="Amortization Calculator">
+      <AmortizationCalculator />
+    </CalculatorLayout>
+  )
 } 

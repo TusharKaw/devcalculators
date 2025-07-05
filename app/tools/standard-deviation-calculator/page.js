@@ -1,4 +1,5 @@
 import StandardDeviationCalculator from "./standard-deviation-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Standard Deviation Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function StandardDeviationCalculatorPage() {
-  return <StandardDeviationCalculator />
+  return (
+    <CalculatorLayout title="Standard Deviation Calculator">
+      <StandardDeviationCalculator />
+    </CalculatorLayout>
+  )
 } 

@@ -1,4 +1,5 @@
 import HoursCalculator from "./hours-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Hours Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function HoursCalculatorPage() {
-  return <HoursCalculator />
+  return (
+    <CalculatorLayout title="Hours Calculator">
+      <HoursCalculator />
+    </CalculatorLayout>
+  )
 } 

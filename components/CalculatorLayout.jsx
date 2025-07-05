@@ -15,12 +15,10 @@ export default function CalculatorLayout({ children, title = "Calculator" }) {
     <div className={`app-container ${darkMode ? 'dark' : 'light'}`}>
       <header className="header">
         <div className="header-content">
-          <div className="header-left">
-            <Link href="/" className="back-button">
-              <span className="back-icon">←</span>
-              <span>Back to Home</span>
-            </Link>
-          </div>
+          <Link href="/" className="back-button">
+            <span className="back-icon">←</span>
+            <span className="back-text">Back to Home</span>
+          </Link>
           <h1 className="header-title">
             <span className="logo-icon">🧮</span>
             <span>DevCalculators</span>
@@ -33,9 +31,6 @@ export default function CalculatorLayout({ children, title = "Calculator" }) {
               aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             >
               {darkMode ? '☀️' : '🌙'}
-            </button>
-            <button className="sign-in-btn">
-              Sign In
             </button>
           </div>
         </div>

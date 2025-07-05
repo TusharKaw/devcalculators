@@ -1,4 +1,5 @@
 import IdealWeightCalculator from "./ideal-weight-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Ideal Weight Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function IdealWeightCalculatorPage() {
-  return <IdealWeightCalculator />
+  return (
+    <CalculatorLayout title="Ideal Weight Calculator">
+      <IdealWeightCalculator />
+    </CalculatorLayout>
+  )
 } 

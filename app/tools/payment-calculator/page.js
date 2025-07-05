@@ -1,4 +1,5 @@
 import PaymentCalculator from "./payment-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Payment Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function PaymentCalculatorPage() {
-  return <PaymentCalculator />
+  return (
+    <CalculatorLayout title="Payment Calculator">
+      <PaymentCalculator />
+    </CalculatorLayout>
+  )
 } 

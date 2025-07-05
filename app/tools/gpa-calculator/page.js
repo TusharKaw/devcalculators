@@ -1,4 +1,5 @@
 import GPACalculator from "./gpa-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "GPA Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function GPACalculatorPage() {
-  return <GPACalculator />
+  return (
+    <CalculatorLayout title="GPA Calculator">
+      <GPACalculator />
+    </CalculatorLayout>
+  )
 } 

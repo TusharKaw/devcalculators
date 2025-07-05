@@ -1,4 +1,5 @@
 import InflationCalculator from "./inflation-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Inflation Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function InflationCalculatorPage() {
-  return <InflationCalculator />
+  return (
+    <CalculatorLayout title="Inflation Calculator">
+      <InflationCalculator />
+    </CalculatorLayout>
+  )
 } 

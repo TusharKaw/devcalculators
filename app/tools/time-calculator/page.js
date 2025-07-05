@@ -1,4 +1,5 @@
 import TimeCalculator from "./time-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Time Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function TimeCalculatorPage() {
-  return <TimeCalculator />
+  return (
+    <CalculatorLayout title="Time Calculator">
+      <TimeCalculator />
+    </CalculatorLayout>
+  )
 } 

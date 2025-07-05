@@ -1,4 +1,5 @@
 import GradeCalculator from "./grade-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Grade Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function GradeCalculatorPage() {
-  return <GradeCalculator />
+  return (
+    <CalculatorLayout title="Grade Calculator">
+      <GradeCalculator />
+    </CalculatorLayout>
+  )
 } 

@@ -1,4 +1,5 @@
 import FractionCalculator from "./fraction-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Fraction Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function FractionCalculatorPage() {
-  return <FractionCalculator />
+  return (
+    <CalculatorLayout title="Fraction Calculator">
+      <FractionCalculator />
+    </CalculatorLayout>
+  )
 } 

@@ -1,4 +1,5 @@
 import BodyFatCalculator from "./body-fat-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Body Fat Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function BodyFatCalculatorPage() {
-  return <BodyFatCalculator />
+  return (
+    <CalculatorLayout title="Body Fat Calculator">
+      <BodyFatCalculator />
+    </CalculatorLayout>
+  )
 } 

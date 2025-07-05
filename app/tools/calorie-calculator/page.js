@@ -1,4 +1,5 @@
 import CalorieCalculator from "./calorie-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Calorie Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function CalorieCalculatorPage() {
-  return <CalorieCalculator />
+  return (
+    <CalculatorLayout title="Calorie Calculator">
+      <CalorieCalculator />
+    </CalculatorLayout>
+  )
 } 

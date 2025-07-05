@@ -1,4 +1,5 @@
 import RetirementCalculator from "./retirement-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Retirement Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function RetirementCalculatorPage() {
-  return <RetirementCalculator />
+  return (
+    <CalculatorLayout title="Retirement Calculator">
+      <RetirementCalculator />
+    </CalculatorLayout>
+  )
 } 

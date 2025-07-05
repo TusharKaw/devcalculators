@@ -1,4 +1,5 @@
 import InvestmentCalculator from "./investment-calculator.jsx"
+import CalculatorLayout from "../../../components/CalculatorLayout.jsx"
 
 export const metadata = {
   title: "Investment Calculator | DevCalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function InvestmentCalculatorPage() {
-  return <InvestmentCalculator />
+  return (
+    <CalculatorLayout title="Investment Calculator">
+      <InvestmentCalculator />
+    </CalculatorLayout>
+  )
 } 

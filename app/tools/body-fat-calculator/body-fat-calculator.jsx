@@ -68,219 +68,270 @@ export default function BodyFatCalculator() {
 
   return (
     <div className="calculator-container">
-      <h1 className="calculator-title">Body Fat Percentage Calculator</h1>
-      
-      <div className="calculator-card">
-        <div className="calculator-grid">
-          <div className="input-section">
-            <div className="input-group">
-              <div className="input-field">
-                <label>Gender</label>
-                <div className="gender-toggle">
-                  <button
-                    className={`gender-option ${gender === "male" ? "active" : ""}`}
-                    onClick={() => setGender("male")}
-                  >
-                    Male
-                  </button>
-                  <button
-                    className={`gender-option ${gender === "female" ? "active" : ""}`}
-                    onClick={() => setGender("female")}
-                  >
-                    Female
-                  </button>
-                </div>
-              </div>
-              
-              <div className="input-field">
-                <label>Age (years)</label>
-                <input
-                  type="number"
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
-                  placeholder="30"
-                  min="18"
-                  max="100"
-                  className="styled-input"
-                />
-              </div>
-              
-              <div className="input-field">
-                <label>Height (cm)</label>
-                <input
-                  type="number"
-                  value={height}
-                  onChange={(e) => setHeight(e.target.value)}
-                  placeholder="175"
-                  min="100"
-                  max="250"
-                  className="styled-input"
-                />
-              </div>
-              
-              <div className="input-field">
-                <label>Neck (cm)</label>
-                <input
-                  type="number"
-                  value={neck}
-                  onChange={(e) => setNeck(e.target.value)}
-                  placeholder="40"
-                  min="20"
-                  max="60"
-                  className="styled-input"
-                />
-              </div>
-              
-              <div className="input-field">
-                <label>Waist (cm)</label>
-                <input
-                  type="number"
-                  value={waist}
-                  onChange={(e) => setWaist(e.target.value)}
-                  placeholder="80"
-                  min="50"
-                  max="150"
-                  className="styled-input"
-                />
-              </div>
-              
-              {gender === "female" && (
-                <div className="input-field">
-                  <label>Hip (cm)</label>
-                  <input
-                    type="number"
-                    value={hip}
-                    onChange={(e) => setHip(e.target.value)}
-                    placeholder="95"
-                    min="60"
-                    max="150"
-                    className="styled-input"
-                  />
-                </div>
-              )}
-            </div>
-            
-            <button className="calculate-btn" onClick={calculate}>
-              Calculate Body Fat
-            </button>
-          </div>
+      <div className="main-content-wrapper">
+        <div className="calculator-content">
+          <h1 className="calculator-title">Body Fat Percentage Calculator</h1>
           
-          <div className="results-section">
-            <div className="scale-container">
-              <div className="body-fat-scale">
-                <div className="scale-labels">
-                  {bodyFatCategories.map((category, index) => (
-                    <div key={index} className="scale-label">
-                      <span className="label-name">{category.name}</span>
-                      <span className="label-range">{category.range}</span>
+          <div className="calculator-card">
+            <div className="calculator-grid">
+              <div className="input-section">
+                <div className="input-group">
+                  <div className="input-field">
+                    <label>Gender</label>
+                    <div className="gender-toggle">
+                      <button
+                        className={`gender-option ${gender === "male" ? "active" : ""}`}
+                        onClick={() => setGender("male")}
+                      >
+                        Male
+                      </button>
+                      <button
+                        className={`gender-option ${gender === "female" ? "active" : ""}`}
+                        onClick={() => setGender("female")}
+                      >
+                        Female
+                      </button>
                     </div>
-                  ))}
+                  </div>
+                  
+                  <div className="input-field">
+                    <label>Age (years)</label>
+                    <input
+                      type="number"
+                      value={age}
+                      onChange={(e) => setAge(e.target.value)}
+                      placeholder="30"
+                      min="18"
+                      max="100"
+                      className="styled-input"
+                    />
+                  </div>
+                  
+                  <div className="input-field">
+                    <label>Height (cm)</label>
+                    <input
+                      type="number"
+                      value={height}
+                      onChange={(e) => setHeight(e.target.value)}
+                      placeholder="175"
+                      min="100"
+                      max="250"
+                      className="styled-input"
+                    />
+                  </div>
+                  
+                  <div className="input-field">
+                    <label>Neck (cm)</label>
+                    <input
+                      type="number"
+                      value={neck}
+                      onChange={(e) => setNeck(e.target.value)}
+                      placeholder="40"
+                      min="20"
+                      max="60"
+                      className="styled-input"
+                    />
+                  </div>
+                  
+                  <div className="input-field">
+                    <label>Waist (cm)</label>
+                    <input
+                      type="number"
+                      value={waist}
+                      onChange={(e) => setWaist(e.target.value)}
+                      placeholder="80"
+                      min="50"
+                      max="150"
+                      className="styled-input"
+                    />
+                  </div>
+                  
+                  {gender === "female" && (
+                    <div className="input-field">
+                      <label>Hip (cm)</label>
+                      <input
+                        type="number"
+                        value={hip}
+                        onChange={(e) => setHip(e.target.value)}
+                        placeholder="95"
+                        min="60"
+                        max="150"
+                        className="styled-input"
+                      />
+                    </div>
+                  )}
                 </div>
                 
-                <div className="scale-visualization">
-                  <div className="scale-bar">
-                    {bodyFatCategories.map((category, index) => (
-                      <div
-                        key={index}
-                        className="scale-segment"
-                        style={{
-                          backgroundColor: category.color,
-                          width: `${(category.max - category.min) / 0.38}%`
-                        }}
-                      ></div>
-                    ))}
+                <button className="calculate-btn" onClick={calculate}>
+                  Calculate Body Fat
+                </button>
+              </div>
+              
+              <div className="results-section">
+                <div className="scale-container">
+                  <div className="body-fat-scale">
+                    <div className="scale-labels">
+                      {bodyFatCategories.map((category, index) => (
+                        <div key={index} className="scale-label">
+                          <span className="label-name">{category.name}</span>
+                          <span className="label-range">{category.range}</span>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="scale-visualization">
+                      <div className="scale-bar">
+                        {bodyFatCategories.map((category, index) => (
+                          <div
+                            key={index}
+                            className="scale-segment"
+                            style={{
+                              backgroundColor: category.color,
+                              width: `${(category.max - category.min) / 0.38}%`
+                            }}
+                          ></div>
+                        ))}
+                      </div>
+                      
+                      {showPointer && (
+                        <div
+                          className="scale-pointer"
+                          style={{
+                            left: `${pointerPosition}%`,
+                            transition: "left 0.5s ease-out"
+                          }}
+                        >
+                          <div className="pointer-line"></div>
+                          <div className="pointer-dot"></div>
+                          <div className="pointer-value">{result}%</div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   
-                  {showPointer && (
-                    <div
-                      className="scale-pointer"
-                      style={{
-                        left: `${pointerPosition}%`,
-                        transition: "left 0.5s ease-out"
-                      }}
-                    >
-                      <div className="pointer-line"></div>
-                      <div className="pointer-dot"></div>
-                      <div className="pointer-value">{result}%</div>
+                  {result && (
+                    <div className="result-display">
+                      <div className="result-value">
+                        <h2>{result}%</h2>
+                        <span>Body Fat Percentage</span>
+                      </div>
+                      {currentCategory && (
+                        <div 
+                          className="result-category"
+                          style={{ backgroundColor: currentCategory.color }}
+                        >
+                          {currentCategory.name}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
               </div>
-              
-              {result && (
-                <div className="result-display">
-                  <div className="result-value">
-                    <h2>{result}%</h2>
-                    <span>Body Fat Percentage</span>
-                  </div>
-                  
-                  {currentCategory && (
-                    <div className="result-category" style={{ backgroundColor: currentCategory.color }}>
-                      {currentCategory.name} Level
-                    </div>
-                  )}
-                </div>
-              )}
+            </div>
+          </div>
+          
+          <div className="about-section">
+            <h2>About Body Fat Calculator</h2>
+            <p>
+              The Body Fat Percentage Calculator uses the U.S. Navy method to estimate your body fat percentage based on measurements of your neck, waist, and hip (for women). This calculator provides a quick and easy way to track your body composition and fitness progress.
+            </p>
+            <p>
+              Body fat percentage is a more accurate indicator of health and fitness than weight alone, as it accounts for muscle mass and overall body composition. Regular monitoring can help you set realistic fitness goals and track your progress more effectively.
+            </p>
+          </div>
+        </div>
+
+        <div className="ad-banner">
+          <div className="ad-content">
+            <p>Advertisement</p>
+            <div className="ad-placeholder">
+              {/* Replace this with your actual ad component */}
+              <span>300x250 Ad Banner</span>
             </div>
           </div>
         </div>
       </div>
-      
-      <div className="about-section">
-  <h2>About Body Fat Percentage</h2>
-  
-  <p>
-    This calculator estimates your body fat percentage using both the U.S. Navy method and BMI method. 
-    Body fat percentage is a more accurate health indicator than weight alone, as it distinguishes between 
-    fat mass and lean body mass. The results include your body fat category, fat mass, lean mass, and 
-    ideal body fat range for your age based on Jackson & Pollock research.
-  </p>
-
-  <h3>Understanding Body Fat Categories</h3>
-  <p>
-    Essential fat is the minimum amount your body needs to function properly (2-5% for men, 10-13% for women). 
-    Athletes typically have lower body fat (6-13% for men, 14-20% for women), while fitness levels range 
-    from 14-17% (men) and 21-24% (women). Average ranges are 18-24% (men) and 25-31% (women), with obesity 
-    beginning at 25%+ for men and 32%+ for women.
-  </p>
-
-  <h3>Health Implications</h3>
-  <p>
-    While excess body fat increases risks for cardiovascular disease, diabetes, and other conditions, 
-    too little body fat can also cause hormonal imbalances and reproductive issues. Visceral fat 
-    (around organs) is particularly concerning as it affects hormone regulation and cholesterol levels. 
-    Our calculator helps you understand where you fall within healthy ranges for your age and gender.
-  </p>
-
-  <h3>Measurement Methods</h3>
-  <p>
-    The U.S. Navy method uses circumference measurements (waist, neck, and for women, hips) combined with 
-    height to estimate body fat. The BMI method provides an alternative estimate using your body mass index 
-    and age. For clinical accuracy, more advanced methods like DEXA scans or hydrostatic weighing are 
-    recommended.
-  </p>
-
-  <h3>Ideal Body Fat Percentage</h3>
-  <p>
-    Your ideal body fat percentage depends on age, gender, and activity level. Generally, men aged 20-40 
-    should aim for 8-19%, while women should target 21-33%. These ranges gradually increase with age. 
-    Our calculator shows your personalized ideal range based on Jackson & Pollock's research.
-  </p>
-</div>
 
       <style jsx>{`
         .calculator-container {
-          max-width: 1000px;
+          min-height: 100vh;
+          background: linear-gradient(135deg, #f0f4ff 0%, #e6f0ff 100%);
+          padding: 1rem 1rem 2rem 1rem;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        .main-content-wrapper {
+          display: flex;
+          max-width: 1200px;
           margin: 0 auto;
-          padding: 20px;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          gap: 0rem;
+        }
+        
+        .calculator-content {
+          flex: 1;
+          min-width: 0;
+        }
+        
+        .ad-banner {
+          width: 300px;
+          flex-shrink: 0;
+        }
+        
+        .ad-content {
+          position: sticky;
+          top: 1rem;
+          background: white;
+          border-radius: 8px;
+          padding: 1rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          text-align: center;
+        }
+        
+        .ad-content p {
+          color: #718096;
+          font-size: 0.875rem;
+          margin-bottom: 0.5rem;
+        }
+        
+        .ad-placeholder {
+          width: 300px;
+          height: 250px;
+          background: #f7fafc;
+          border: 1px dashed #cbd5e0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #a0aec0;
+        }
+        
+        @media (max-width: 1024px) {
+          .main-content-wrapper {
+            flex-direction: column;
+          }
+          
+          .ad-banner {
+            width: 100%;
+            order: -1;
+            margin-bottom: 1.5rem;
+          }
+          
+          .ad-content {
+            position: static;
+          }
+          
+          .ad-placeholder {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+          }
         }
         
         .calculator-title {
-          color: #2c3e50;
           text-align: center;
-          margin-bottom: 30px;
-          font-size: 2.2rem;
+          color: #2c3e50;
+          font-size: 2.5rem;
+          margin-bottom: 2rem;
+          font-weight: 700;
         }
         
         .calculator-card {
@@ -288,19 +339,19 @@ export default function BodyFatCalculator() {
           border-radius: 12px;
           padding: 30px;
           box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-          margin-bottom: 30px;
+          margin-bottom: 2rem;
         }
         
         .calculator-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 40px;
+          align-items: start;
         }
         
         .input-section {
           display: flex;
           flex-direction: column;
-          gap: 20px;
         }
         
         .input-group {
@@ -310,50 +361,46 @@ export default function BodyFatCalculator() {
         }
         
         .input-field {
-          margin-bottom: 15px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
         }
         
         .input-field label {
-          display: block;
-          margin-bottom: 8px;
-          font-weight: 500;
-          color: #34495e;
+          font-weight: 600;
+          color: #2c3e50;
           font-size: 14px;
         }
         
         .styled-input {
-          width: 100%;
-          padding: 12px 15px;
-          border: 2px solid #e0e0e0;
+          padding: 12px 16px;
+          border: 2px solid #e1e8ed;
           border-radius: 8px;
           font-size: 16px;
           transition: all 0.3s;
-          background-color: #f9f9f9;
+          background: #f8f9fa;
         }
         
         .styled-input:focus {
           outline: none;
           border-color: #3498db;
-          background-color: white;
-          box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
-        }
-        
-        .styled-input::placeholder {
-          color: #bbb;
+          background: white;
+          box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
         
         .gender-toggle {
           display: flex;
+          border: 2px solid #e1e8ed;
           border-radius: 8px;
           overflow: hidden;
-          border: 2px solid #e0e0e0;
+          background: #f8f9fa;
         }
         
         .gender-option {
           flex: 1;
-          padding: 12px;
+          padding: 12px 16px;
           border: none;
-          background: #f9f9f9;
+          background: transparent;
           cursor: pointer;
           transition: all 0.3s;
           font-size: 14px;

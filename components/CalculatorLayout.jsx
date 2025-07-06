@@ -4,37 +4,13 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 
 export default function CalculatorLayout({ children, title = "Calculator" }) {
-  const [darkMode, setDarkMode] = useState(false)
-
-  // Toggle dark mode
-  useEffect(() => {
-    document.body.className = darkMode ? 'dark-mode' : 'light-mode'
-  }, [darkMode])
-
   return (
-    <div className={`app-container ${darkMode ? 'dark' : 'light'}`}>
+    <div className="app-container">
+      <Link href="/">
       <header className="header">
-        <div className="header-content">
-          <Link href="/" className="back-button">
-            <span className="back-icon">←</span>
-            <span className="back-text">Back to Home</span>
-          </Link>
-          <h1 className="header-title">
-            <span className="logo-icon">🧮</span>
-            <span>DevCalculators</span>
-            <span className="logo-net">.com</span>
-          </h1>
-          <div className="header-actions">
-            <button 
-              className="theme-toggle"
-              onClick={() => setDarkMode(!darkMode)}
-              aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {darkMode ? '☀️' : '🌙'}
-            </button>
-          </div>
-        </div>
+        <h1 className="site-title">DevCalculators.com</h1>
       </header>
+      </Link>
 
       <main className="calculator-main">
         {children}
@@ -42,7 +18,7 @@ export default function CalculatorLayout({ children, title = "Calculator" }) {
 
       <footer className="footer">
         <div className="footer-content">
-          <div className="footer-logo">DevCalculators.com</div>
+          <div className="footer-logo" style={{color:'#fff'}}>DevCalculators.com</div>
           <div className="footer-links">
             <a href="#">About</a>
             <a href="#">Privacy</a>

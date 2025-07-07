@@ -159,6 +159,12 @@ export default function AgeCalculator() {
               )}
             </div>
             
+            {/* Mobile Ad Placeholder */}
+            <div className="ad-placeholder mobile-ad">
+              {/* Replace this with your actual ad component */}
+              <span>300x250 Ad Banner</span>
+            </div>
+            
             <div className="about-section">
               <h2>About Age Calculator</h2>
               <div className="age-calculator-description">
@@ -169,8 +175,6 @@ export default function AgeCalculator() {
                 <p>Unlike basic age tools, our calculator answers specific questions like <em>"How many weeks old am I?"</em> or <em>"How many days until my next birthday?"</em>. It's particularly useful for <strong>parents</strong> tracking children's growth, <strong>athletes</strong> monitoring training milestones, and <strong>genealogists</strong> researching family histories.</p>
 
                 <p>The tool is completely <strong>free to use</strong>, requires <strong>no registration</strong>, and works seamlessly across all devices including <strong>mobile phones</strong> and <strong>tablets</strong>. With its simple interface and detailed results, it's become a favorite among educators, healthcare professionals, and curious individuals worldwide.</p>
-
-                <p>For added convenience, you can <strong>bookmark this page</strong> to regularly check age-related statistics or share your results on social media. </p>
               </div>
               <div className="tip">
                 <span>💡</span> Tip: The calculation is based on your local time zone.
@@ -179,15 +183,10 @@ export default function AgeCalculator() {
           </div>
         </div>
 
-        <div className="ad-banner">
-          <div className="ad-content">
-            <p>Advertisement</p>
             <div className="ad-placeholder">
               {/* Replace this with your actual ad component */}
               <span>300x250 Ad Banner</span>
             </div>
-          </div>
-        </div>
       </div>
 
       <style jsx>{`
@@ -210,36 +209,20 @@ export default function AgeCalculator() {
           min-width: 0;
         }
         
-        .ad-banner {
-          width: 300px;
-          flex-shrink: 0;
-        }
-        
-        .ad-content {
-          position: sticky;
-          top: 1rem;
-          background: white;
-          border-radius: 8px;
-          padding: 1rem;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          text-align: center;
-        }
-        
-        .ad-content p {
-          color: #718096;
-          font-size: 0.875rem;
-          margin-bottom: 0.5rem;
-        }
-        
         .ad-placeholder {
           width: 300px;
           height: 250px;
+          padding: 1rem;
           background: #f7fafc;
           border: 1px dashed #cbd5e0;
           display: flex;
           align-items: center;
           justify-content: center;
           color: #a0aec0;
+        }
+        
+        .mobile-ad {
+          display: none;
         }
         
         .age-calculator {
@@ -250,6 +233,7 @@ export default function AgeCalculator() {
         .header {
           text-align: center;
           margin-bottom: 1rem;
+          border-radius: 12px;
         }
         
         .header h1 {
@@ -268,10 +252,10 @@ export default function AgeCalculator() {
         
         .calculator-card {
           background: white;
-          border-radius: 12px;
           box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
           overflow: hidden;
           margin-bottom: 1rem;
+          border-radius: 12px;
         }
         
         .input-section {
@@ -303,13 +287,13 @@ export default function AgeCalculator() {
         
         .input-group input:focus {
           outline: none;
-          border-color: #4299e1;
+          border-color: #1E293C;
           box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
         }
         
         .input-group button {
           padding: 0.75rem 1.5rem;
-          background: #4299e1;
+          background: #1E293C;
           color: white;
           font-weight: 600;
           border: none;
@@ -320,11 +304,11 @@ export default function AgeCalculator() {
         }
         
         .input-group button:hover {
-          background: #3182ce;
+          background: #415066;
         }
         
         .input-group button.disabled {
-          background: #a0aec0;
+          background:rgba(30, 41, 60, 0.60);
           cursor: not-allowed;
         }
         
@@ -339,16 +323,16 @@ export default function AgeCalculator() {
         }
         
         .results-card {
-          background: #ebf8ff;
+          background:rgb(65, 79, 102);
           border-radius: 8px;
           padding: 1.5rem;
-          border: 2px solid #bee3f8;
+          border: 2px solid #1E293C;
         }
         
         .results-card h2 {
           font-size: 1.5rem;
           font-weight: 700;
-          color: #2b6cb0;
+          color: #fff;
           margin-bottom: 1.25rem;
           display: flex;
           align-items: center;
@@ -392,7 +376,7 @@ export default function AgeCalculator() {
         .other-units h3 {
           font-size: 1.125rem;
           font-weight: 600;
-          color: #4a5568;
+          color: #fff;
           margin-bottom: 1rem;
         }
         
@@ -473,6 +457,19 @@ export default function AgeCalculator() {
             max-width: 300px;
             margin: 0 auto;
           }
+          
+          /* Hide desktop ad on mobile */
+          .main-content-wrapper > .ad-placeholder {
+            display: none;
+          }
+          
+          /* Show mobile ad */
+          .mobile-ad {
+            display: flex !important;
+            width: 100%;
+            max-width: 300px;
+            margin: 1rem auto;
+          }
         }
         
         @media (max-width: 640px) {
@@ -486,6 +483,15 @@ export default function AgeCalculator() {
           
           .input-group {
             flex-direction: column;
+          }
+          
+          .input-group input {
+            width: 100%;
+            margin-bottom: 0.5rem;
+          }
+          
+          .input-group button {
+            width: 100%;
           }
           
           .results-grid {

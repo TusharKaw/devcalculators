@@ -1,82 +1,108 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Info, RefreshCw, TrendingUp, Bitcoin } from "lucide-react"
+import { useState, useEffect } from "react";
 
 const CryptoConverter = () => {
-  const [amount, setAmount] = useState("1")
-  const [fromCrypto, setFromCrypto] = useState("BTC")
-  const [toCurrency, setToCurrency] = useState("USD")
-  const [result, setResult] = useState(null)
-  const [rates, setRates] = useState({})
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [amount, setAmount] = useState("1");
+  const [fromCrypto, setFromCrypto] = useState("BTC");
+  const [toCurrency, setToCurrency] = useState("USD");
+  const [result, setResult] = useState(null);
+  const [rates, setRates] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [animate, setAnimate] = useState(false);
+  const [activeTab, setActiveTab] = useState("converter");
+  const [lastUpdated, setLastUpdated] = useState("");
+
+  // Light theme color palette (reversed from original)
+  const themeColors = {
+    primary: "#FFFFFF",  // Background
+    secondary: "#F5F5F7",  // Cards
+    accent: "#2B2E3D",
+    lightAccent: "#404457",
+    text: "#2B2E3D",  // Dark text
+    mutedText: "#5A5D6C",  // Slightly muted dark text
+    cardBg: "#FFFFFF",
+    inputBg: "#F5F5F7",
+    border: "#D8D8DC"
+  };
 
   const cryptocurrencies = {
-    BTC: { name: "Bitcoin", symbol: "₿" },
-    ETH: { name: "Ethereum", symbol: "Ξ" },
-    USDT: { name: "Tether", symbol: "₮" },
-    BNB: { name: "BNB", symbol: "BNB" },
-    SOL: { name: "Solana", symbol: "◎" },
-    ADA: { name: "Cardano", symbol: "₳" },
-    XRP: { name: "Ripple", symbol: "XRP" },
-    DOT: { name: "Polkadot", symbol: "DOT" },
-    DOGE: { name: "Dogecoin", symbol: "Ð" },
-    AVAX: { name: "Avalanche", symbol: "AVAX" },
-    MATIC: { name: "Polygon", symbol: "MATIC" },
-    LINK: { name: "Chainlink", symbol: "LINK" },
-    UNI: { name: "Uniswap", symbol: "UNI" },
-    LTC: { name: "Litecoin", symbol: "Ł" },
-    BCH: { name: "Bitcoin Cash", symbol: "BCH" }
-  }
+    BTC: { name: "Bitcoin", symbol: "₿", color: "#F7931A" },
+    ETH: { name: "Ethereum", symbol: "Ξ", color: "#627EEA" },
+    USDT: { name: "Tether", symbol: "₮", color: "#26A17B" },
+    BNB: { name: "BNB", symbol: "BNB", color: "#F3BA2F" },
+    SOL: { name: "Solana", symbol: "◎", color: "#00FFA3" },
+    ADA: { name: "Cardano", symbol: "₳", color: "#0033AD" },
+    XRP: { name: "Ripple", symbol: "XRP", color: "#27A2DB" },
+    DOT: { name: "Polkadot", symbol: "DOT", color: "#E6007A" },
+    DOGE: { name: "Dogecoin", symbol: "Ð", color: "#CBAE5B" },
+    AVAX: { name: "Avalanche", symbol: "AVAX", color: "#E84142" },
+    MATIC: { name: "Polygon", symbol: "MATIC", color: "#8247E5" },
+    LINK: { name: "Chainlink", symbol: "LINK", color: "#2A5ADA" },
+    UNI: { name: "Uniswap", symbol: "UNI", color: "#FF007A" },
+    LTC: { name: "Litecoin", symbol: "Ł", color: "#345D9D" },
+    BCH: { name: "Bitcoin Cash", symbol: "BCH", color: "#0AC18E" }
+  };
 
   const fiatCurrencies = {
-    USD: { name: "US Dollar", symbol: "$" },
-    EUR: { name: "Euro", symbol: "€" },
-    GBP: { name: "British Pound", symbol: "£" },
-    JPY: { name: "Japanese Yen", symbol: "¥" },
-    CAD: { name: "Canadian Dollar", symbol: "C$" },
-    AUD: { name: "Australian Dollar", symbol: "A$" },
-    CHF: { name: "Swiss Franc", symbol: "CHF" },
-    CNY: { name: "Chinese Yuan", symbol: "¥" },
-    INR: { name: "Indian Rupee", symbol: "₹" },
-    BRL: { name: "Brazilian Real", symbol: "R$" }
-  }
+    USD: { name: "US Dollar", symbol: "$", color: "#6CC57C" },
+    EUR: { name: "Euro", symbol: "€", color: "#3E7BFA" },
+    GBP: { name: "British Pound", symbol: "£", color: "#B22222" },
+    JPY: { name: "Japanese Yen", symbol: "¥", color: "#BC002D" },
+    CAD: { name: "Canadian Dollar", symbol: "C$", color: "#D52B1E" },
+    AUD: { name: "Australian Dollar", symbol: "A$", color: "#00843D" },
+    CHF: { name: "Swiss Franc", symbol: "CHF", color: "#D52B1E" },
+    CNY: { name: "Chinese Yuan", symbol: "¥", color: "#DE2910" },
+    INR: { name: "Indian Rupee", symbol: "₹", color: "#FF9933" },
+    BRL: { name: "Brazilian Real", symbol: "R$", color: "#009739" }
+  };
+
+  // Demo rates for when API fails
+  const demoRates = {
+    USD: { BTC: 45000, ETH: 3000, USDT: 1, BNB: 400, SOL: 100, ADA: 0.5, XRP: 0.8, DOT: 20, DOGE: 0.15, AVAX: 80, MATIC: 1.5, LINK: 15, UNI: 25, LTC: 150, BCH: 300 },
+    EUR: { BTC: 38000, ETH: 2500, USDT: 0.85, BNB: 340, SOL: 85, ADA: 0.42, XRP: 0.68, DOT: 17, DOGE: 0.13, AVAX: 68, MATIC: 1.28, LINK: 12.75, UNI: 21.25, LTC: 127.5, BCH: 255 },
+    GBP: { BTC: 33000, ETH: 2200, USDT: 0.73, BNB: 292, SOL: 73, ADA: 0.36, XRP: 0.58, DOT: 14.6, DOGE: 0.11, AVAX: 58.4, MATIC: 1.1, LINK: 10.95, UNI: 18.25, LTC: 109.5, BCH: 219 }
+  };
 
   useEffect(() => {
-    fetchCryptoRates()
-  }, [])
+    fetchCryptoRates();
+  }, []);
 
   const fetchCryptoRates = async () => {
-    setLoading(true)
-    setError("")
+    setLoading(true);
+    setError("");
     try {
-      // Using CoinGecko API (free tier)
-      const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${getCoinGeckoId(fromCrypto)}&vs_currencies=${toCurrency.toLowerCase()}`)
-      const data = await response.json()
-      const rate = data[getCoinGeckoId(fromCrypto)][toCurrency.toLowerCase()]
-      setRates({ [toCurrency]: rate })
-      convertCrypto()
-    } catch (err) {
-      setError("Failed to fetch crypto rates. Using demo rates.")
-      // Fallback rates for demo
-      const demoRates = {
-        USD: { BTC: 45000, ETH: 3000, USDT: 1, BNB: 400, SOL: 100, ADA: 0.5, XRP: 0.8, DOT: 20, DOGE: 0.15, AVAX: 80, MATIC: 1.5, LINK: 15, UNI: 25, LTC: 150, BCH: 300 },
-        EUR: { BTC: 38000, ETH: 2500, USDT: 0.85, BNB: 340, SOL: 85, ADA: 0.42, XRP: 0.68, DOT: 17, DOGE: 0.13, AVAX: 68, MATIC: 1.28, LINK: 12.75, UNI: 21.25, LTC: 127.5, BCH: 255 },
-        GBP: { BTC: 33000, ETH: 2200, USDT: 0.73, BNB: 292, SOL: 73, ADA: 0.36, XRP: 0.58, DOT: 14.6, DOGE: 0.11, AVAX: 58.4, MATIC: 1.1, LINK: 10.95, UNI: 18.25, LTC: 109.5, BCH: 219 }
+      const coinGeckoId = getCoinGeckoId(fromCrypto);
+      const response = await fetch(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${coinGeckoId}&vs_currencies=${toCurrency.toLowerCase()}&include_last_updated_at=true`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
       }
-      setRates({ [toCurrency]: demoRates[toCurrency]?.[fromCrypto] || 1 })
+      
+      const data = await response.json();
+      
+      if (!data[coinGeckoId] || !data[coinGeckoId][toCurrency.toLowerCase()]) {
+        throw new Error("Invalid data format from API");
+      }
+      
+      const rate = data[coinGeckoId][toCurrency.toLowerCase()];
+      const timestamp = data[coinGeckoId].last_updated_at;
+      
+      setRates({ [toCurrency]: rate });
+      setLastUpdated(new Date(timestamp * 1000).toLocaleString());
+      convertCrypto();
+    } catch (err) {
+      console.error("API Error:", err);
+      setError("Failed to fetch live rates. Using demo data.");
+      setRates({ [toCurrency]: demoRates[toCurrency]?.[fromCrypto] || 1 });
+      setLastUpdated(new Date().toLocaleString());
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const getCoinGeckoId = (symbol) => {
     const mapping = {
@@ -95,28 +121,35 @@ const CryptoConverter = () => {
       UNI: "uniswap",
       LTC: "litecoin",
       BCH: "bitcoin-cash"
-    }
-    return mapping[symbol] || "bitcoin"
-  }
+    };
+    return mapping[symbol] || "bitcoin";
+  };
 
   const convertCrypto = () => {
-    if (!amount || !rates[toCurrency]) return
+    if (!amount || !rates[toCurrency]) return;
     
-    const numAmount = parseFloat(amount)
-    const rate = rates[toCurrency]
-    const converted = numAmount * rate
-    setResult({
-      amount: numAmount,
-      converted: converted,
-      rate: rate
-    })
-  }
+    setAnimate(true);
+    setTimeout(() => {
+      setAnimate(false);
+      const numAmount = parseFloat(amount);
+      const rate = rates[toCurrency];
+      const converted = numAmount * rate;
+      
+      setResult({
+        amount: numAmount,
+        converted: converted,
+        rate: rate,
+        fromCrypto: fromCrypto,
+        toCurrency: toCurrency
+      });
+    }, 300);
+  };
 
   useEffect(() => {
     if (rates[toCurrency]) {
-      convertCrypto()
+      convertCrypto();
     }
-  }, [amount, fromCrypto, toCurrency, rates])
+  }, [amount, fromCrypto, toCurrency, rates]);
 
   const formatCurrency = (value, currency) => {
     return new Intl.NumberFormat("en-US", {
@@ -124,244 +157,626 @@ const CryptoConverter = () => {
       currency: currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
-    }).format(value)
-  }
+    }).format(value);
+  };
 
   const formatCrypto = (value, crypto) => {
-    const decimals = value < 0.01 ? 8 : value < 1 ? 4 : 2
-    return `${parseFloat(value).toFixed(decimals)} ${crypto}`
-  }
+    const decimals = value < 0.01 ? 8 : value < 1 ? 4 : 2;
+    return `${parseFloat(value).toFixed(decimals)} ${crypto}`;
+  };
+
+  const popularConversions = [
+    { from: "BTC", to: "USD", amount: "1" },
+    { from: "ETH", to: "USD", amount: "1" },
+    { from: "BTC", to: "EUR", amount: "1" },
+    { from: "SOL", to: "USD", amount: "10" },
+    { from: "ADA", to: "USD", amount: "1000" },
+    { from: "DOGE", to: "USD", amount: "10000" }
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Crypto Converter
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300">
-              Convert between cryptocurrencies and fiat currencies with real-time rates
-            </p>
-          </div>
+    <div className="crypto-converter-container">
+      <div className="main-content-wrapper">
+        <div className="calculator-content">
+          <div className="crypto-converter">
+            <div className="header">
+              <h2>Crypto Converter</h2>
+              <p className="subtitle">Convert between cryptocurrencies and fiat currencies with real-time rates</p>
+            </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Main Calculator */}
-            <div className="lg:col-span-3">
-              <Card className="shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <Bitcoin className="h-5 w-5" />
-                    Crypto Conversion
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-6">
-                    {/* Amount Input */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Amount
-                      </label>
-                      <Input
-                        type="number"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        placeholder="Enter amount"
-                        className="text-lg"
-                        min="0"
-                        step="0.00000001"
-                      />
+            <div className="calculator-card">
+              <div className="input-section">
+                <label htmlFor="amount">Enter Amount</label>
+                <div className="input-group">
+                  <input
+                    type="number"
+                    id="amount"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="Enter amount"
+                    min="0"
+                    step="0.00000001"
+                  />
+                </div>
+
+                <div className="currency-selectors">
+                  <div className="selector">
+                    <label htmlFor="fromCrypto">From Cryptocurrency</label>
+                    <select
+                      id="fromCrypto"
+                      value={fromCrypto}
+                      onChange={(e) => setFromCrypto(e.target.value)}
+                      style={{ borderColor: cryptocurrencies[fromCrypto]?.color }}
+                    >
+                      {Object.entries(cryptocurrencies).map(([code, info]) => (
+                        <option key={code} value={code}>
+                          {code} - {info.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="selector">
+                    <label htmlFor="toCurrency">To Currency</label>
+                    <select
+                      id="toCurrency"
+                      value={toCurrency}
+                      onChange={(e) => setToCurrency(e.target.value)}
+                      style={{ borderColor: fiatCurrencies[toCurrency]?.color }}
+                    >
+                      {Object.entries(fiatCurrencies).map(([code, info]) => (
+                        <option key={code} value={code}>
+                          {code} - {info.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                  onClick={fetchCryptoRates}
+                  disabled={!amount || loading}
+                  className={!amount ? 'disabled' : ''}
+                >
+                  {loading ? 'Updating...' : 'Convert'}
+                </button>
+              </div>
+
+              {error && (
+                <div className="error-message">
+                  {error}
+                </div>
+              )}
+
+              {result && (
+                <div className={`results-section ${animate ? 'animate' : ''}`}>
+                  <div className="results-card">
+                    <div className="conversion-result">
+                      <div className="result-text">
+                        {formatCrypto(result.amount, result.fromCrypto)} = {formatCurrency(result.converted, result.toCurrency)}
+                      </div>
+                      <div className="rate-text">
+                        1 {result.fromCrypto} = {formatCurrency(result.rate, result.toCurrency)}
+                      </div>
                     </div>
 
-                    {/* Currency Selection */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          From Cryptocurrency
-                        </label>
-                        <Select value={fromCrypto} onValueChange={setFromCrypto}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.entries(cryptocurrencies).map(([code, info]) => (
-                              <SelectItem key={code} value={code}>
-                                {code} - {info.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          To Currency
-                        </label>
-                        <Select value={toCurrency} onValueChange={setToCurrency}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.entries(fiatCurrencies).map(([code, info]) => (
-                              <SelectItem key={code} value={code}>
-                                {code} - {info.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    {/* Update Button */}
-                    <div className="flex justify-center">
-                      <Button
-                        onClick={fetchCryptoRates}
-                        disabled={loading}
-                        className="px-8"
+                    <div className="tabs">
+                      <button 
+                        className={`tab ${activeTab === 'converter' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('converter')}
                       >
-                        {loading ? (
-                          <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                        ) : (
-                          <RefreshCw className="h-4 w-4 mr-2" />
-                        )}
-                        Update Rates
-                      </Button>
+                        Converter
+                      </button>
+                      <button 
+                        className={`tab ${activeTab === 'popular' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('popular')}
+                      >
+                        Popular
+                      </button>
+                      <button 
+                        className={`tab ${activeTab === 'info' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('info')}
+                      >
+                        Info
+                      </button>
                     </div>
-
-                    {/* Error Message */}
-                    {error && (
-                      <Alert variant="destructive">
-                        <AlertDescription>{error}</AlertDescription>
-                      </Alert>
-                    )}
-
-                    {/* Result */}
-                    {result && (
-                      <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 p-6 rounded-lg border border-purple-200 dark:border-purple-800">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                            {formatCrypto(result.amount, fromCrypto)} = {formatCurrency(result.converted, toCurrency)}
-                          </div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">
-                            Rate: 1 {fromCrypto} = {formatCurrency(result.rate, toCurrency)}
+                    
+                    <div className="tab-content">
+                      {activeTab === 'converter' && (
+                        <div className="converter-content">
+                          <div className="currency-details">
+                            <div className="currency-info" style={{ backgroundColor: `${cryptocurrencies[fromCrypto]?.color}20` }}>
+                              <h3>{cryptocurrencies[fromCrypto]?.name} ({fromCrypto})</h3>
+                              <p>Symbol: {cryptocurrencies[fromCrypto]?.symbol}</p>
+                            </div>
+                            <div className="currency-info" style={{ backgroundColor: `${fiatCurrencies[toCurrency]?.color}20` }}>
+                              <h3>{fiatCurrencies[toCurrency]?.name} ({toCurrency})</h3>
+                              <p>Symbol: {fiatCurrencies[toCurrency]?.symbol}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-
-                    {/* Popular Conversions */}
-                    <div className="mt-6">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Popular Conversions</h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {[
-                          { from: "BTC", to: "USD", amount: "1" },
-                          { from: "ETH", to: "USD", amount: "1" },
-                          { from: "BTC", to: "EUR", amount: "1" },
-                          { from: "SOL", to: "USD", amount: "10" },
-                          { from: "ADA", to: "USD", amount: "1000" },
-                          { from: "DOGE", to: "USD", amount: "10000" }
-                        ].map((conversion, index) => (
-                          <Button
-                            key={index}
-                            variant="outline"
-                            onClick={() => {
-                              setFromCrypto(conversion.from)
-                              setToCurrency(conversion.to)
-                              setAmount(conversion.amount)
-                            }}
-                            className="justify-start"
-                          >
-                            {conversion.amount} {conversion.from} → {conversion.to}
-                          </Button>
-                        ))}
-                      </div>
+                      )}
+                      
+                      {activeTab === 'popular' && (
+                        <div className="popular-content">
+                          <h3>Popular Conversions</h3>
+                          <div className="popular-grid">
+                            {popularConversions.map((conv, index) => (
+                              <div 
+                                key={index} 
+                                className="popular-item"
+                                onClick={() => {
+                                  setFromCrypto(conv.from);
+                                  setToCurrency(conv.to);
+                                  setAmount(conv.amount);
+                                }}
+                              >
+                                {conv.amount} {conv.from} → {conv.to}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {activeTab === 'info' && (
+                        <div className="info-content">
+                          <div className="info-item">
+                            <span>Crypto Symbol:</span>
+                            <span>{cryptocurrencies[fromCrypto]?.symbol}</span>
+                          </div>
+                          <div className="info-item">
+                            <span>Currency Symbol:</span>
+                            <span>{fiatCurrencies[toCurrency]?.symbol}</span>
+                          </div>
+                          <div className="info-item">
+                            <span>Last Updated:</span>
+                            <span>{lastUpdated || "Just now"}</span>
+                          </div>
+                          <div className="disclaimer">
+                            Crypto prices are highly volatile. Rates may vary across exchanges.
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              )}
             </div>
+            
+            {/* Mobile Ad Placeholder */}
+            <div className="ad-placeholder mobile-ad">
+              {/* Replace this with your actual ad component */}
+              <span>300x250 Ad Banner</span>
+            </div>
+            
+            <div className="about-section">
+              <h2>About Crypto Converter</h2>
+              <div className="converter-description">
+                <p>Our <strong>Crypto Converter</strong> helps you convert between major cryptocurrencies and fiat currencies using real-time exchange rates from CoinGecko API. Whether you're tracking your portfolio, planning investments, or just curious about crypto values, our tool provides accurate and up-to-date conversions.</p>
 
-            {/* Ad Banner */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-8">
-                <Card className="shadow-lg border-0 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700">
-                  <CardContent className="p-6">
-                    <div className="text-center">
-                      <div className="w-full h-64 bg-gradient-to-br from-purple-200 to-indigo-300 dark:from-purple-800 dark:to-indigo-700 rounded-lg flex items-center justify-center mb-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-purple-800 dark:text-purple-200 mb-2">
-                            Ad Space
-                          </div>
-                          <div className="text-sm text-purple-600 dark:text-purple-300">
-                            300x250
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Advertisement
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <p>The converter supports <strong>15+ cryptocurrencies</strong> including Bitcoin, Ethereum, Solana, and more, along with <strong>10+ fiat currencies</strong> like USD, EUR, GBP, and JPY. The rates are updated regularly to ensure accuracy.</p>
+
+                <p>This tool is perfect for <strong>crypto investors</strong>, <strong>traders</strong>, and <strong>enthusiasts</strong> who need quick conversions. The interface is designed to be simple yet powerful, with features like popular conversion presets and detailed currency information.</p>
+
+                <p>The converter is completely <strong>free to use</strong>, requires <strong>no registration</strong>, and works on all devices. For the most accurate trading rates, always check with your exchange as rates may vary slightly between platforms.</p>
+              </div>
+              <div className="tip">
+                <span>💡</span> Tip: Bookmark this page for quick access to crypto conversions!
               </div>
             </div>
           </div>
+        </div>
 
-          {/* About Section */}
-          <Card className="mt-8 shadow-lg border-0">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Info className="h-5 w-5 text-purple-600" />
-                About Crypto Converter
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-600 dark:text-gray-300">
-                Our Crypto Converter provides real-time conversion rates between major cryptocurrencies and fiat currencies. 
-                Track the value of your digital assets, plan investments, or simply stay updated with current crypto prices 
-                using our reliable and easy-to-use converter.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Supported Cryptocurrencies:</h4>
-                  <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
-                    <li>• Bitcoin (BTC)</li>
-                    <li>• Ethereum (ETH)</li>
-                    <li>• Tether (USDT)</li>
-                    <li>• BNB (BNB)</li>
-                    <li>• Solana (SOL)</li>
-                    <li>• Cardano (ADA)</li>
-                    <li>• And 8 more...</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Key Features:</h4>
-                  <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
-                    <li>• Real-time price updates</li>
-                    <li>• 15+ major cryptocurrencies</li>
-                    <li>• 10+ fiat currencies</li>
-                    <li>• High precision calculations</li>
-                    <li>• Mobile-friendly interface</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
-                <h4 className="font-semibold text-purple-900 dark:text-purple-100 mb-2">⚠️ Important Notes:</h4>
-                <ul className="text-sm text-purple-800 dark:text-purple-200 space-y-1">
-                  <li>• Crypto prices are highly volatile</li>
-                  <li>• Rates update every few minutes</li>
-                  <li>• Always verify rates before trading</li>
-                  <li>• Consider transaction fees in conversions</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="ad-placeholder">
+          {/* Replace this with your actual ad component */}
+          <span>300x250 Ad Banner</span>
         </div>
       </div>
-    </div>
-  )
-}
 
-export default CryptoConverter 
+      <style jsx>{`
+        .crypto-converter-container {
+          min-height: 100vh;
+          background: ${themeColors.primary};
+          padding: 1rem 1rem 2rem 1rem;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+          color: ${themeColors.text};
+        }
+        
+        .main-content-wrapper {
+          display: flex;
+          max-width: 1200px;
+          margin: 0 auto;
+          gap: 0rem;
+        }
+        
+        .calculator-content {
+          flex: 1;
+          min-width: 0;
+        }
+        
+        .ad-placeholder {
+          width: 300px;
+          height: 250px;
+          padding: 1rem;
+          background: ${themeColors.secondary};
+          border: 1px dashed ${themeColors.border};
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: ${themeColors.mutedText};
+        }
+        
+        .mobile-ad {
+          display: none;
+        }
+        
+        .crypto-converter {
+          max-width: 800px;
+          margin: 0 auto;
+        }
+        
+        .header {
+          text-align: center;
+          margin-bottom: 1rem;
+          border-radius: 12px;
+          background: #2B2E3D; /* Dark header background */
+          padding: 1.5rem;
+          color: white; /* White text on dark header */
+        }
+        
+        .header h2 {
+          font-size: 2rem;
+          font-weight: 800;
+          margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+          font-size: 1.1rem;
+          max-width: 500px;
+          margin: 0 auto;
+          opacity: 0.9;
+          color: white; /* White text on dark header */
+        }
+        
+        .calculator-card {
+          background: ${themeColors.cardBg};
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          overflow: hidden;
+          margin-bottom: 1rem;
+          border-radius: 12px;
+          border: 1px solid ${themeColors.border};
+        }
+        
+        .input-section {
+          padding: 1.5rem;
+        }
+        
+        .input-section label {
+          display: block;
+          font-size: 1.125rem;
+          font-weight: 500;
+          color: ${themeColors.text};
+          margin-bottom: 0.75rem;
+        }
+        
+        .input-group {
+          display: flex;
+          margin-bottom: 1rem;
+        }
+        
+        .input-group input {
+          flex: 1;
+          min-width: 0;
+          padding: 0.75rem 1rem;
+          font-size: 1rem;
+          border: 2px solid ${themeColors.border};
+          border-radius: 8px;
+          transition: all 0.2s;
+          background: ${themeColors.inputBg};
+          color: ${themeColors.text};
+        }
+        
+        .input-group input:focus {
+          outline: none;
+          border-color: ${themeColors.accent};
+          box-shadow: 0 0 0 2px ${themeColors.accent}40;
+        }
+        
+        .currency-selectors {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+        
+        .selector {
+          flex: 1;
+        }
+        
+        .selector select {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          font-size: 1rem;
+          border: 2px solid ${themeColors.border};
+          border-radius: 8px;
+          transition: all 0.2s;
+          background: ${themeColors.inputBg};
+          color: ${themeColors.text};
+        }
+        
+        .selector select:focus {
+          outline: none;
+          border-color: ${themeColors.accent};
+          box-shadow: 0 0 0 2px ${themeColors.accent}40;
+        }
+        
+        .input-section button {
+          width: 100%;
+          padding: 0.75rem 1.5rem;
+          background: ${themeColors.accent};
+          color: white;
+          font-weight: 600;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-size: 1rem;
+        }
+        
+        .input-section button:hover {
+          background: ${themeColors.lightAccent};
+        }
+        
+        .input-section button.disabled {
+          background: ${themeColors.accent}80;
+          cursor: not-allowed;
+        }
+        
+        .error-message {
+          padding: 0.75rem 1.5rem;
+          background: #FFF5F5;
+          color: #C53030;
+          border-left: 4px solid #C53030;
+          margin: 0 1.5rem 1.5rem;
+          border-radius: 4px;
+        }
+        
+        .results-section {
+          padding: 0 1.5rem 1.5rem;
+          transition: all 0.3s;
+        }
+        
+        .results-section.animate {
+          transform: scale(1.02);
+          opacity: 0.9;
+        }
+        
+        .results-card {
+          background: ${themeColors.cardBg};
+          border-radius: 8px;
+          padding: 1.5rem;
+          overflow: hidden;
+          border: 1px solid ${themeColors.border};
+        }
+        
+        .conversion-result {
+          text-align: center;
+          margin-bottom: 1.5rem;
+        }
+        
+        .result-text {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: ${themeColors.text};
+          margin-bottom: 0.5rem;
+        }
+        
+        .rate-text {
+          font-size: 1rem;
+          opacity: 0.9;
+          color: ${themeColors.mutedText};
+        }
+        
+        .tabs {
+          display: flex;
+          margin-bottom: 1rem;
+          border-bottom: 2px solid ${themeColors.border};
+        }
+        
+        .tab {
+          flex: 1;
+          padding: 0.75rem;
+          background: transparent;
+          border: none;
+          color: ${themeColors.mutedText};
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          position: relative;
+        }
+        
+        .tab.active {
+          color: ${themeColors.text};
+        }
+        
+        .tab.active:after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: ${themeColors.accent};
+        }
+        
+        .tab:hover:not(.active) {
+          background: ${themeColors.primary};
+        }
+        
+        .tab-content {
+          min-height: 150px;
+        }
+        
+        .currency-details {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+        
+        .currency-info {
+          padding: 1rem;
+          border-radius: 8px;
+          border: 1px solid ${themeColors.border};
+        }
+        
+        .currency-info h3 {
+          font-size: 1rem;
+          margin-bottom: 0.5rem;
+          color: ${themeColors.text};
+        }
+        
+        .currency-info p {
+          font-size: 0.9rem;
+          color: ${themeColors.mutedText};
+        }
+        
+        .popular-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+          gap: 0.75rem;
+          margin-top: 1rem;
+        }
+        
+        .popular-item {
+          background: ${themeColors.primary};
+          color: ${themeColors.text};
+          padding: 0.75rem;
+          border-radius: 8px;
+          text-align: center;
+          font-size: 0.9rem;
+          transition: all 0.2s;
+          cursor: pointer;
+          border: 1px solid ${themeColors.border};
+        }
+        
+        .popular-item:hover {
+          transform: translateY(-2px);
+          background: ${themeColors.accent};
+          color: white;
+        }
+        
+        .info-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 0.75rem 0;
+          border-bottom: 1px solid ${themeColors.border};
+          color: ${themeColors.text};
+        }
+        
+        .disclaimer {
+          margin-top: 1rem;
+          padding: 0.75rem;
+          background: ${themeColors.primary};
+          border-radius: 6px;
+          font-size: 0.8rem;
+          color: ${themeColors.mutedText};
+          border: 1px solid ${themeColors.border};
+        }
+        
+        .about-section {
+          background: ${themeColors.cardBg};
+          border-radius: 12px;
+          padding: 1.5rem;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          border: 1px solid ${themeColors.border};
+        }
+        
+        .about-section h2 {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: ${themeColors.text};
+          margin-bottom: 1rem;
+        }
+        
+        .about-section p {
+          color: ${themeColors.mutedText};
+          line-height: 1.6;
+          margin-bottom: 1rem;
+        }
+        
+        .tip {
+          display: flex;
+          align-items: center;
+          background: ${themeColors.accent}20;
+          padding: 1rem;
+          border-radius: 6px;
+          border-left: 4px solid ${themeColors.accent};
+          color: ${themeColors.text};
+          font-size: 0.875rem;
+        }
+        
+        .tip span {
+          margin-right: 0.5rem;
+        }
+        
+        @media (max-width: 1024px) {
+          .main-content-wrapper {
+            flex-direction: column;
+          }
+          
+          .ad-placeholder {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+          }
+          
+          /* Hide desktop ad on mobile */
+          .main-content-wrapper > .ad-placeholder {
+            display: none;
+          }
+          
+          /* Show mobile ad */
+          .mobile-ad {
+            display: flex !important;
+            width: 100%;
+            max-width: 300px;
+            margin: 1rem auto;
+          }
+        }
+        
+        @media (max-width: 640px) {
+          .header h2 {
+            font-size: 1.75rem;
+          }
+          
+          .subtitle {
+            font-size: 1rem;
+          }
+          
+          .currency-selectors {
+            flex-direction: column;
+          }
+          
+          .tabs {
+            flex-direction: column;
+            border-bottom: none;
+          }
+          
+          .tab {
+            border-bottom: 1px solid ${themeColors.border};
+          }
+          
+          .tab.active:after {
+            display: none;
+          }
+          
+          .currency-details {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default CryptoConverter;

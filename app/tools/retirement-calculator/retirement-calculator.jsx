@@ -1,172 +1,388 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
+
+function calculateGrowth(currentAge, retireAge, savings, contrib, rate) {
+  const years = retireAge - currentAge;
+  let data = [];
+  let fv = savings;
+  for (let i = 0; i <= years; i++) {
+    if (i > 0) {
+      fv = fv * (1 + rate / 100) + contrib;
+    }
+    data.push({ year: currentAge + i, value: fv });
+  }
+  return data;
+}
 
 export default function RetirementCalculator() {
-  const [currentAge, setCurrentAge] = useState("")
-  const [retireAge, setRetireAge] = useState("")
-  const [savings, setSavings] = useState("")
-  const [contrib, setContrib] = useState("")
-  const [rate, setRate] = useState("")
-  const [result, setResult] = useState(null)
+  const [currentAge, setCurrentAge] = useState("");
+  const [retireAge, setRetireAge] = useState("");
+  const [savings, setSavings] = useState("");
+  const [contrib, setContrib] = useState("");
+  const [rate, setRate] = useState("");
+  const [result, setResult] = useState(null);
+  const [growth, setGrowth] = useState([]);
+  const [error, setError] = useState("");
+  const [animate, setAnimate] = useState(false);
 
   const calculate = () => {
-    const ca = parseInt(currentAge)
-    const ra = parseInt(retireAge)
-    const s = parseFloat(savings)
-    const c = parseFloat(contrib)
-    const r = parseFloat(rate)
-    if (!ca || !ra || !s || !c || !r || ra <= ca) return setResult(null)
-    const years = ra - ca
-    let fv = s * Math.pow(1 + r / 100, years)
-    for (let i = 1; i <= years; i++) {
-      fv += c * Math.pow(1 + r / 100, years - i)
+    const ca = parseInt(currentAge);
+    const ra = parseInt(retireAge);
+    const s = parseFloat(savings);
+    const c = parseFloat(contrib);
+    const r = parseFloat(rate);
+    if (!ca || !ra || !s || !c || !r || ra <= ca) {
+      setError("Please fill all fields correctly and ensure retirement age is greater than current age.");
+      setResult(null);
+      setGrowth([]);
+      return;
     }
-    setResult(fv.toFixed(2))
-  }
+    setError("");
+    setAnimate(true);
+    setTimeout(() => {
+      setAnimate(false);
+      const years = ra - ca;
+      let fv = s * Math.pow(1 + r / 100, years);
+      for (let i = 1; i <= years; i++) {
+        fv += c * Math.pow(1 + r / 100, years - i);
+      }
+      setResult(fv.toFixed(2));
+      setGrowth(calculateGrowth(ca, ra, s, c, r));
+    }, 300);
+  };
+
+  // SVG Chart for savings growth
+  const renderChart = () => {
+    if (!growth.length) return null;
+    const max = Math.max(...growth.map(d => d.value));
+    const min = Math.min(...growth.map(d => d.value));
+    const w = 320, h = 120, pad = 30;
+    const points = growth.map((d, i) => {
+      const x = pad + (i * (w - 2 * pad)) / (growth.length - 1);
+      const y = h - pad - ((d.value - min) / (max - min || 1)) * (h - 2 * pad);
+      return `${x},${y}`;
+    }).join(" ");
+    return (
+      <svg width={w} height={h} className="growth-chart">
+        <polyline fill="none" stroke="#28A844" strokeWidth="3" points={points} />
+        {growth.map((d, i) => {
+          const x = pad + (i * (w - 2 * pad)) / (growth.length - 1);
+          const y = h - pad - ((d.value - min) / (max - min || 1)) * (h - 2 * pad);
+          return <circle key={i} cx={x} cy={y} r={3} fill="#28A844" />;
+        })}
+        {/* Y axis labels */}
+        <text x={5} y={pad} fontSize="10" fill="#888">${max.toFixed(0)}</text>
+        <text x={5} y={h - pad} fontSize="10" fill="#888">${min.toFixed(0)}</text>
+        {/* X axis labels */}
+        <text x={pad} y={h - 5} fontSize="10" fill="#888">{growth[0].year}</text>
+        <text x={w - pad} y={h - 5} fontSize="10" fill="#888" textAnchor="end">{growth[growth.length - 1].year}</text>
+      </svg>
+    );
+  };
 
   return (
     <div className="retirement-calculator-container">
       <div className="main-content-wrapper">
         <div className="calculator-content">
-          <h1>Retirement Calculator</h1>
-          <div className="calculator-card">
-            <div style={{ marginBottom: 10 }}>
-              <label>Current Age: </label>
-              <input type="number" value={currentAge} onChange={e => setCurrentAge(e.target.value)} style={{ marginLeft: 10, width: 80 }} />
+          <div className="retirement-calculator">
+            <div className="header">
+              <h2>Retirement Calculator</h2>
+              <p className="subtitle">Estimate your savings at retirement age</p>
             </div>
-            <div style={{ marginBottom: 10 }}>
-              <label>Retirement Age: </label>
-              <input type="number" value={retireAge} onChange={e => setRetireAge(e.target.value)} style={{ marginLeft: 10, width: 80 }} />
-            </div>
-            <div style={{ marginBottom: 10 }}>
-              <label>Current Savings: </label>
-              <input type="number" value={savings} onChange={e => setSavings(e.target.value)} style={{ marginLeft: 10, width: 120 }} />
-            </div>
-            <div style={{ marginBottom: 10 }}>
-              <label>Annual Contribution: </label>
-              <input type="number" value={contrib} onChange={e => setContrib(e.target.value)} style={{ marginLeft: 10, width: 120 }} />
-            </div>
-            <div style={{ marginBottom: 10 }}>
-              <label>Expected Return (%): </label>
-              <input type="number" value={rate} onChange={e => setRate(e.target.value)} style={{ marginLeft: 10, width: 80 }} />
-            </div>
-            <button onClick={calculate} style={{ background: "#0097a7", color: "white", border: "none", padding: "10px 20px", borderRadius: 4, cursor: "pointer", fontSize: 16 }}>Calculate</button>
-            {result && (
-              <div style={{ marginTop: 20, fontSize: 18 }}>
-                <strong>Estimated Retirement Savings: ${result}</strong>
+            <div className="calculator-card">
+              <div className="input-section">
+                <div className="input-group">
+                  <div className="input-field">
+                    <label>Current Age</label>
+                    <input type="number" value={currentAge} onChange={e => setCurrentAge(e.target.value)} min="0" />
+                  </div>
+                  <div className="input-field">
+                    <label>Retirement Age</label>
+                    <input type="number" value={retireAge} onChange={e => setRetireAge(e.target.value)} min="0" />
+                  </div>
+                  <div className="input-field">
+                    <label>Current Savings ($)</label>
+                    <input type="number" value={savings} onChange={e => setSavings(e.target.value)} min="0" />
+                  </div>
+                  <div className="input-field">
+                    <label>Annual Contribution ($)</label>
+                    <input type="number" value={contrib} onChange={e => setContrib(e.target.value)} min="0" />
+                  </div>
+                  <div className="input-field">
+                    <label>Expected Return (%)</label>
+                    <input type="number" value={rate} onChange={e => setRate(e.target.value)} min="0" step="0.01" />
+                  </div>
+                  <button onClick={calculate} className="calc-btn">Calculate</button>
+                </div>
+                {error && <div className="error-message">{error}</div>}
               </div>
-            )}
-          </div>
-          
-          <div className="about-section">
-            <h2>About Retirement Calculator</h2>
-            <p>
-              The Retirement Calculator helps you estimate your savings at retirement age. (You can update this section later.)
-            </p>
-          </div>
-        </div>
-
-        <div className="ad-banner">
-          <div className="ad-content">
-            <p>Advertisement</p>
-            <div className="ad-placeholder">
-              {/* Replace this with your actual ad component */}
+              {result && !error && (
+                <div className={`results-section ${animate ? 'animate' : ''}`}>
+                  <div className="results-card">
+                    <h2>
+                      <span className="icon">💰</span>
+                      Estimated Retirement Savings
+                    </h2>
+                    <div className="result-box">
+                      <span className="highlight">${result}</span>
+                    </div>
+                    <div className="chart-section">
+                      <div className="chart-label">Savings Growth</div>
+                      {renderChart()}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="ad-placeholder mobile-ad">
               <span>300x250 Ad Banner</span>
             </div>
+            <div className="about-section">
+              <h2>About Retirement Calculator</h2>
+              <div className="retirement-calculator-description">
+                <p>The <strong>Retirement Calculator</strong> helps you estimate your savings at retirement age, including annual contributions and expected return. Visualize your savings growth over time.</p>
+              </div>
+              <div className="tip">
+                <span>💡</span> Tip: Start saving early and contribute regularly for the best results!
+              </div>
+            </div>
           </div>
         </div>
+        <div className="ad-placeholder">
+          <span>300x250 Ad Banner</span>
+        </div>
       </div>
-
       <style jsx>{`
         .retirement-calculator-container {
           min-height: 100vh;
-          background: linear-gradient(135deg, #f0f4ff 0%, #e6f0ff 100%);
+          background: linear-gradient(135deg, #e8f9ee 0%, #d2f4e3 100%);
           padding: 1rem 1rem 2rem 1rem;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
-        
         .main-content-wrapper {
           display: flex;
           max-width: 1200px;
           margin: 0 auto;
           gap: 0rem;
         }
-        
         .calculator-content {
           flex: 1;
           min-width: 0;
         }
-        
-        .calculator-card {
-          background: white;
-          padding: 30px;
-          border-radius: 8px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-          margin-bottom: 30px;
-        }
-        
-        .about-section {
-          background: white;
-          padding: 20px;
-          border-radius: 8px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .ad-banner {
-          width: 300px;
-          flex-shrink: 0;
-        }
-        
-        .ad-content {
-          position: sticky;
-          top: 1rem;
-          background: white;
-          border-radius: 8px;
-          padding: 1rem;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          text-align: center;
-        }
-        
-        .ad-content p {
-          color: #718096;
-          font-size: 0.875rem;
-          margin-bottom: 0.5rem;
-        }
-        
         .ad-placeholder {
           width: 300px;
           height: 250px;
+          padding: 1rem;
           background: #f7fafc;
-          border: 1px dashed #cbd5e0;
+          border: 1px dashed #28A844;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #a0aec0;
+          color: #28A844;
         }
-        
+        .mobile-ad {
+          display: none;
+        }
+        .retirement-calculator {
+          max-width: 800px;
+          margin: 0 auto;
+        }
+        .header {
+          text-align: center;
+          margin-bottom: 1rem;
+          border-radius: 12px;
+          background: #28A844;
+          color: #fff;
+          padding: 1.5rem 1rem 1rem 1rem;
+        }
+        .header h2 {
+          font-size: 2.5rem;
+          font-weight: 800;
+          margin-bottom: 0.5rem;
+          color: #fff;
+        }
+        .subtitle {
+          font-size: 1.25rem;
+          color: #fff;
+          max-width: 500px;
+          margin: 0 auto;
+        }
+        .calculator-card {
+          background: #fff;
+          border-radius: 16px;
+          box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+          padding: 2rem 1.5rem 1.5rem 1.5rem;
+          margin-bottom: 2rem;
+        }
+        .input-section label {
+          font-weight: 500;
+          margin-top: 1rem;
+          display: block;
+          color: #28A844;
+        }
+        .input-group {
+          margin-bottom: 1rem;
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+        .input-field {
+          flex: 1;
+          min-width: 120px;
+        }
+        .input-field input[type="number"] {
+          padding: 0.5rem;
+          border-radius: 6px;
+          border: 1px solid #cbd5e0;
+          width: 100%;
+          font-size: 1rem;
+          color: #1a1a1a;
+        }
+        .calc-btn {
+          background: #28A844;
+          color: #fff;
+          border: none;
+          border-radius: 6px;
+          padding: 0.7rem 1.5rem;
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin-top: 1.7rem;
+          cursor: pointer;
+          transition: background 0.2s, transform 0.2s;
+        }
+        .calc-btn:hover {
+          background: #21913a;
+          transform: translateY(-2px) scale(1.03);
+        }
+        .error-message {
+          color: #e53e3e;
+          font-size: 0.95rem;
+          margin-top: 0.5rem;
+        }
+        .results-section {
+          margin-top: 2rem;
+          transition: opacity 0.3s;
+        }
+        .results-section.animate {
+          opacity: 0.5;
+        }
+        .results-card {
+          background: #e8f9ee;
+          border-radius: 12px;
+          padding: 1.5rem;
+          text-align: center;
+          border: 2px solid #28A844;
+        }
+        .results-card h2 {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #28A844;
+          margin-bottom: 1.25rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .results-card h2 .icon {
+          margin-right: 0.5rem;
+        }
+        .result-box {
+          background: #fff;
+          border-radius: 8px;
+          padding: 1rem 2rem;
+          box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+          font-size: 1.5rem;
+          color: #28A844;
+          font-weight: bold;
+          display: inline-block;
+        }
+        .highlight {
+          font-size: 2rem;
+          color: #28A844;
+          font-weight: bold;
+        }
+        .chart-section {
+          margin-top: 1.5rem;
+        }
+        .chart-label {
+          font-size: 1rem;
+          color: #28A844;
+          margin-bottom: 0.5rem;
+        }
+        .growth-chart {
+          width: 100%;
+          max-width: 320px;
+          display: block;
+          margin: 0 auto;
+          background: #f7fafc;
+          border-radius: 8px;
+        }
+        .about-section {
+          background: #fff;
+          border-radius: 12px;
+          padding: 1.5rem;
+          margin-top: 2rem;
+        }
+        .about-section h2 {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #28A844;
+          margin-bottom: 1rem;
+        }
+        .about-section p {
+          color: #1a1a1a;
+          line-height: 1.6;
+          margin-bottom: 1rem;
+        }
+        .tip {
+          background: #e8f9ee;
+          border-radius: 8px;
+          padding: 0.7rem 1rem;
+          color: #28A844;
+          font-size: 1.1rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
         @media (max-width: 1024px) {
           .main-content-wrapper {
             flex-direction: column;
           }
-          
-          .ad-banner {
-            width: 100%;
-            order: -1;
-            margin-bottom: 1.5rem;
-          }
-          
-          .ad-content {
-            position: static;
-          }
-          
           .ad-placeholder {
             width: 100%;
             max-width: 300px;
             margin: 0 auto;
           }
+          .main-content-wrapper > .ad-placeholder {
+            display: none;
+          }
+          .mobile-ad {
+            display: flex !important;
+            width: 100%;
+            max-width: 300px;
+            margin: 1rem auto;
+          }
+        }
+        @media (max-width: 640px) {
+          .header h2 {
+            font-size: 2rem;
+          }
+          .subtitle {
+            font-size: 1rem;
+          }
+          .input-group {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+          .input-field input {
+            width: 100%;
+            margin-bottom: 0.5rem;
+          }
+          .calc-btn {
+            width: 100%;
+          }
         }
       `}</style>
     </div>
-  )
+  );
 } 

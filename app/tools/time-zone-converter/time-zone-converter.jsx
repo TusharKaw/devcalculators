@@ -31,7 +31,7 @@ const cityCoordinates = {
   'Asia/Seoul': { coordinates: [126.978, 37.5665], name: 'Seoul' },
   'Asia/Singapore': { coordinates: [103.8198, 1.3521], name: 'Singapore' },
   'Asia/Dubai': { coordinates: [55.2708, 25.2048], name: 'Dubai' },
-  'Asia/Kolkata': { coordinates: [77.209, 28.6139], name: 'Mumbai' },
+  'Asia/Kolkata': { coordinates: [77.209, 28.6139], name: 'Delhi' },
   'Australia/Sydney': { coordinates: [151.2093, -33.8688], name: 'Sydney' },
   'Australia/Melbourne': { coordinates: [144.9631, -37.8136], name: 'Melbourne' },
   'Pacific/Auckland': { coordinates: [174.7633, -36.8485], name: 'Auckland' },
@@ -71,7 +71,7 @@ export default function TimeZoneConverter() {
     'Asia/Seoul': { name: 'Seoul', offset: 9 },
     'Asia/Singapore': { name: 'Singapore', offset: 8 },
     'Asia/Dubai': { name: 'Dubai', offset: 4 },
-    'Asia/Kolkata': { name: 'Mumbai', offset: 5.5 },
+    'Asia/Kolkata': { name: 'Delhi', offset: 5.5 },
     'Australia/Sydney': { name: 'Sydney', offset: 10 },
     'Australia/Melbourne': { name: 'Melbourne', offset: 10 },
     'Pacific/Auckland': { name: 'Auckland', offset: 12 },
@@ -613,7 +613,7 @@ export default function TimeZoneConverter() {
           border-radius: 8px;
           cursor: pointer;
           transition: all 0.2s;
-          margin-bottom: 1.8rem;
+          margin-bottom: 0rem;
         }
         
         .swap-btn:hover {

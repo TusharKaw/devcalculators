@@ -1,4 +1,5 @@
 import CurrencyConverter from "./currency-converter.jsx"
+import CalculatorLayout from '@/components/CalculatorLayout';
 
 export const metadata = {
   title: "Currency Converter | Devcalculators.com",
@@ -8,5 +9,9 @@ export const metadata = {
 }
 
 export default function CurrencyConverterPage() {
-  return <CurrencyConverter />
+  return (
+    <CalculatorLayout title="Crypto Converter">
+      <CurrencyConverter />
+    </CalculatorLayout>
+  );
 } 
